@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dubai Airport</title>
+    <link rel="icon" href="https://www.ninimovers.com/wp-content/uploads/2015/02/fa-fa-plane.png" type="image/png" sizes="24*24">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link rel="stylesheet" href="/src/styles">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  </head>
+
+
+  <body background="/src/assets/dubaiAirport" >
+    <section>
+      <h1>Dubai International Airport</h1>
+    </section>
+    <section>
+      <div>
+        <center>
+          <input id="searchText" type="text" name="search" placeholder="Enter search query..">
+          <input id="searchButton" type="button" value="Search" />
+        </center>
+      </div>
+    </section>
+
+    <section>
+    <!--for demo wrap-->
+
+
+        <div class="tbl-header">
+          <table  cellpadding="0" cellspacing="0" border="0">
+            <thead>
+              <tr>
+                <th>flight Number</th>
+                <th>Terminal</th>
+                <th>Carrier</th>
+                <th>Source</th>
+                <th>Destination</th>
+                <th>scheduled</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div class="tbl-content" id="tbl-content">
+          <table id="table" cellpadding="0" cellspacing="0" border="0">
+            <tbody>
+
+            </tbody>
+          </table>
+        </div>
+
+    </section>
+    <div id="fade"></div>
+    <div id="modal">
+        <img id="loader" src="/src/assets/spinner" />
+    </div>
+  </body>
+
+
+
+  <script>
+    var searchQuery = ""
+    $(document).ready(function(){
+        $("#searchButton").click(function(){
+            openModal()
+            searchQuery = $("#searchText").val()
+            $("#searchText").val("")
+            if(searchQuery) {
+              $("#searchButton").attr("disabled", true);
+              console.log(searchQuery)
+              $.get("https://prototype-flight-test.herokuapp.com/api/search?searchQuery="+searchQuery, function(data, status){
+                   $("#searchButton").removeAttr("disabled");
+                   closeModal()
+                  populateTableWithFlights(data)
+              });
+            }
+        });
+    });
+
+    function populateTableWithFlights(data) {
+        var myBooks = data
+        // CREATE DYNAMIC TABLE.
+        var table = document.createElement("table");
+        // ADD JSON DATA TO THE TABLE AS ROWS.
+        for (var i = 0; i < myBooks.length; i++) {
+            tr = table.insertRow(-1);
+                var tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = myBooks[i]["flightNumber"];
+                var tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = myBooks[i]["terminal"];
+                var tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = myBooks[i]["fullName"];
+                var tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = myBooks[i]["lang"]["en"]["originName"];
+                var tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = myBooks[i]["lang"]["en"]["destinationName"];
+                var tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = new Date(myBooks[i]["scheduled"]*1000);
+
+        }
+        var divContainer = document.getElementById("tbl-content");
+        divContainer.innerHTML = "";
+        divContainer.appendChild(table);
+    }
+    function openModal() {
+        document.getElementById('modal').style.display = 'block';
+        document.getElementById('fade').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+        document.getElementById('fade').style.display = 'none';
+    }
+  </script>
+  <script>
+  $(window).on("load resize ", function() {
+    var scrollWidth = $('.tbl-content').width() - $('.tbl-content table').width();
+    $('.tbl-header').css({'padding-right':scrollWidth});
+  }).resize();
+  </script>
+</html>
