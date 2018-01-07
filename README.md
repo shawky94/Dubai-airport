@@ -1,27 +1,33 @@
-# Task
+# Dubai Airport Search
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.3.
+This is a web application which allow user search for flight from/to Dubai International Airport.
+Node.js is used as a server side technology. Also the application uses MongoDB to cache flights.
+The application is totally hosted on heroku server.
 
-## Development server
+## Data consistency vs performance
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+The endpoint supported by Dubai Airport refreshes every 1 minute so the application send a request to these endpoints every 1 minute to update the data stored in the database.
+The application uses a 'cron-job' which runs every 1 min to call the application's endpoint 'api/refreshFlightsData' which get flights data from Dubai Airport endpoints and update flights data in the database.
+The application has an efficient searching api with low latency as the application query its databsae directly without having to request Dubai Airport api which improved the performance.
+This technique guarantees that data is always consistant and at the same time it has small response time.
 
-## Code scaffolding
+## Application portal
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+1- search portal :
+  -link : https://prototype-flight-test.herokuapp.com/
+  -instructions :
+    Enter the search query in the text box then click on "search" button
 
-## Build
+## Backend endpoint
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+1- search endpoint:
+  -Method : GET
+  -url : 'https://prototype-flight-test.herokuapp.com/api/search?searchQuery=' + searchQuery
 
-## Running unit tests
+2- refresh flights endpoint (used by cron-job)
+  -Method: GET
+  -url : http://prototype-flight-test.herokuapp.com/api/refreshFlightsData
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Contact
+    For any questions email me "ahmedselsabagh94@gmail.com"
