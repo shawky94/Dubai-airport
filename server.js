@@ -47,7 +47,7 @@ app.get('/src/assets/dubaiAirport',function(req,res){
     res.end(img, 'binary');
 });
 
-app.get("/api/refreshArrivals", function(req, res) {
+app.get("/api/refreshFlightsData", function(req, res) {
   RequestHandler.populateDatabaseWithFlights();
   res.status(200).json({"message" :"refetching flights in a background job"});
 
@@ -62,39 +62,4 @@ app.get("/api/search/", function(req, res) {
     handleError(res, error.message, "Failed to get flights.");
   })
 
-});
-
-
-app.get("/api/allFlights", function(req, res) {
-
-  Config.db.collection(Config.ARRIVAL_COLLECTION).find({}).toArray(function(err, docs) {
-    var allCities = {}
-    var arrOfCities = []
-
-    for(var key in docs) {
-      if(!allCities[docs[key].fullName]) {
-        allCities[docs[key].fullName] = true
-        arrOfCities.push({"name" : docs[key].fullName})
-      }
-
-
-    }
-
-    Config.db.collection(Config.DEPARTURE_COLLECTION).find({}).toArray(function(err, docs2) {
-      for(var key in docs2) {
-        if(!allCities[docs2[key].fullName]) {
-          allCities[docs2[key].fullName] = true
-          arrOfCities.push({"name" : docs2[key].fullName})
-        }
-
-      }
-      if (err) {
-        handleError(res, err.message, "Failed to get flights.");
-      } else {
-        res.status(200).json(arrOfCities);
-      }
-    })
-
-
-  });
 });

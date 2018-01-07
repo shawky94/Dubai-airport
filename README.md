@@ -15,8 +15,7 @@ This technique guarantees that data is always consistant and at the same time it
 
 1- search portal :
   -link : https://prototype-flight-test.herokuapp.com/
-  -instructions :
-    Enter the search query in the text box then click on "search" button
+
 
 ## Backend endpoint
 
@@ -24,7 +23,7 @@ This technique guarantees that data is always consistant and at the same time it
   -Method : GET
   -url : 'https://prototype-flight-test.herokuapp.com/api/search?searchQuery=' + searchQuery
 
-2- refresh flights endpoint (used by cron-job)
+2- refresh flights endpoint (used by cron-job):
   -Method: GET
   -url : http://prototype-flight-test.herokuapp.com/api/refreshFlightsData
 
